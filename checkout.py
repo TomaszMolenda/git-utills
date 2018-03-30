@@ -11,18 +11,25 @@ if len(sys.argv) == 1:
 
 issueNumber = sys.argv[1]
 
+isReview = False
+if len(sys.argv) == 3:
+    isReview = sys.argv[2] == 'r'
+
 g = git.Git(os.getcwd())
 
 branches = set([])
 
-for branch in g.branch().split('\n'):
+for branch in g.branch('-r').split('\n'):
     branches.add(branch.strip())
 
-for branch in g.branch('-r').split('\n'):
-    branches.add(branch.replace('origin/', '').strip())
+if not isReview:
+    for branch in g.branch().split('\n'):
+        branches.add(branch.strip())
 
 matchesBranches = []
 for branch in branches:
+    if not isReview:
+        branch = branch.replace('origin/', '')
     if issueNumber.lower() in branch.lower():
         matchesBranches.append(branch)
 
