@@ -26,12 +26,14 @@ if not isReview:
     for branch in g.branch().split('\n'):
         branches.add(branch.strip())
 
-matchesBranches = []
+tempMatchesBranches = set([])
 for branch in branches:
     if not isReview:
         branch = branch.replace('origin/', '')
     if issueNumber.lower() in branch.lower():
-        matchesBranches.append(branch)
+        tempMatchesBranches.add(branch)
+
+matchesBranches = list(tempMatchesBranches)
 
 if len(matchesBranches) == 0:
     print("Nie znaleziono nic, exit")
